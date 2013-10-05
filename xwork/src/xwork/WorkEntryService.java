@@ -32,18 +32,15 @@ public class WorkEntryService {
 			// 作業データの作成
 			WorkData data = WorkDataManager.create(req);
 			
-			// 依頼内容のチェック
-			data.check();
-			
 			// 作業データを登録（処理開始）
 			WorkDataManager.regist(data);
 
-			// 作業プロセスキューに登録（処理開始）
+			// 作業プロセスキューに登録（処理開始）⇒ WorkFlowServiceが処理する
+			// 	eventType, workID, flowName, itemID, jobName, jobID {
 			WorkFlowEventQueue.put(new WorkFlowEvent(WorkFlowEvent.EventID.START, data.getWorkID(), null, null, null, null));
 			
 			// 受付結果を設定
-			res.setStatus("OK");
-			
+			res.setStatus("OK");			
 		}
 		
 		public WorkResult receipt(String workID) {

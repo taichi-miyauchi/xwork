@@ -13,6 +13,8 @@ import org.junit.runners.MethodSorters;
 import xwork.WorkEntryResult;
 import xwork.WorkEntryService;
 import xwork.WorkRequest;
+import xwork.WorkResult;
+import xwork.cmn.model.Item;
 import xwork.flow.WorkFlowModelManager;
 import xwork.flow.WorkFlowService;
 import xwork.flow.model.WorkFlowModel;
@@ -28,6 +30,9 @@ import xwork.job.model.JobResult;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)		// メソッド名順に実行
 public class Through1Test {
 
+	/** エントリサービス */
+	WorkEntryService entryService = new WorkEntryService();
+	
 	/** ジョブサービス */
 	private JobService service = new JobService();
 	
@@ -58,14 +63,17 @@ public class Through1Test {
 	 * 作業依頼
 	 */
 	@Test
-	public void step1() {
-		// デジタル化処理依頼
-		WorkEntryService entryService = new WorkEntryService();
+	public void step1_WorkRequest() {
 		
+		// デジタル化処理依頼
 		WorkRequest request = new WorkRequest();
 		request.setWorkTypeID("digitize-trim");
 		request.setConetnt("あいうえお");
-				
+
+		// 項目1(画像1)
+		request.addItem(new Item("item001", null, "画像①"));
+		request.addItem(new Item("item002", null, "画像②"));
+		
 		// 処理依頼
 		WorkEntryResult result = new WorkEntryResult();
 		entryService.entry(request, result);
@@ -78,9 +86,9 @@ public class Through1Test {
 	 */
 	@Test
 	public void step2_trim() {
-		Job job = service.get();
-		assertNotNull("Jobなし", job);
-		trace(job);
+		
+		Job job = this.service.get();
+		this.trace(job);
 
 		// トリムジョブであること
 		assertEquals("Trim", job.getJobName());
@@ -101,8 +109,7 @@ public class Through1Test {
 	@Test
 	public void step3_entry1() {
 		Job job = service.get();
-		assertNotNull("Jobなし", job);
-		trace(job);
+		this.trace(job);
 
 		// エントリジョブであること
 		assertEquals("Entry", job.getJobName());
@@ -121,8 +128,7 @@ public class Through1Test {
 	@Test
 	public void step3_entry2() {
 		Job job = service.get();
-		assertNotNull("Jobなし", job);
-		trace(job);
+		this.trace(job);
 
 		// エントリジョブであること
 		assertEquals("Entry", job.getJobName());
@@ -141,8 +147,7 @@ public class Through1Test {
 	@Test
 	public void step4_entry1() {
 		Job job = service.get();
-		assertNotNull("Jobなし", job);
-		trace(job);
+		this.trace(job);
 
 		// エントリジョブであること
 		assertEquals("Entry", job.getJobName());
@@ -161,8 +166,7 @@ public class Through1Test {
 	@Test
 	public void step5_entry2() {
 		Job job = service.get();
-		assertNotNull("Jobなし", job);
-		trace(job);
+		this.trace(job);
 
 		// エントリジョブであること
 		assertEquals("Entry", job.getJobName());
@@ -175,8 +179,25 @@ public class Through1Test {
 		service.submit(job);			
 	}
 
+	@Test
+	public void step999() {
+		// デジタル化処理依頼
+		WorkEntryService entryService = new WorkEntryService();
+		
+		WorkResult result = entryService.receipt("1");
+
+		System.out.println("============================");
+		System.out.println(result.getContent());
+		for (Item item : result.getItemList()) {
+			System.out.println("item " + item.toString());
+		}
+		System.out.println("============================");
+		
+	}
+	
 	
 	private void trace(Job job) {
+		assertNotNull("Jobなし", job);
 		System.out.println(" ----------------------------------------------------");
 		System.out.println(" - JobName:" + job.getJobName());
 		System.out.println(" - Content:" + job.getRequest().getContent());

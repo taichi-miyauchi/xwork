@@ -89,10 +89,10 @@ public class EntryCheckJobProcess implements IJobProcess {
 		job.setResultStatus("UNMATCH");
 		List<Item> items = job.getRequest().getItems();
 		for (int i=0; i<items.size(); i++) {
-			String baseText = items.get(i).getText();
+			String baseText = items.get(i).getValue();
 			for (int j=0; j<items.size(); j++) {
 				if (i == j) continue;	// 基準と同じ場合はスルー
-				if (baseText.equals(items.get(j).getText())) {
+				if (baseText.equals(items.get(j).getValue())) {
 					job.setResultStatus("MATCH");
 					JobResult ret = new JobResult();
 					ret.setContent(baseText);

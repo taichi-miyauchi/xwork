@@ -1,6 +1,9 @@
 package xwork;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import xwork.cmn.model.Item;
 
 /**
  * 作業要求データ.
@@ -14,10 +17,17 @@ public class WorkRequest {
 	private String workID = null;
 	// 仕事種別ID
 	private String workTypeID = null;
-	// 仕事内容
-	private List<WorkItem> workItemList = null;
+	// 仕事項目
+	private List<Item> items = new ArrayList<Item>();
 	private String content = null;
 	
+	/**
+	 * 項目追加.
+	 * @param item
+	 */
+	public void addItem(Item item) {
+		this.items.add(item);
+	}
 	
 	public String getAceessToken() {
 		return aceessToken;
@@ -46,11 +56,11 @@ public class WorkRequest {
 		this.content = content;
 	}
 	
-	public List<WorkItem> getWorkItemList() {
-		return this.workItemList;
+	public List<Item> getWorkItemList() {
+		return this.items;
 	}
-	public void setWorkItemList(List<WorkItem> workItemList) {
-		this.workItemList = workItemList;
+	public void setWorkItemList(List<Item> items) {
+		this.items = items;
 	}
 	
 

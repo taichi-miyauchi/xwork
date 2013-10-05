@@ -35,9 +35,8 @@ public class WorkFlowService implements Runnable  {
 	public void run() {
 		while (this.isRun) {
 			try {
-//System.out.println("aaaaa");
 				// ワークフローイベント取得
-				WorkFlowEvent event = WorkFlowEventQueue.get();				
+				WorkFlowEvent event = WorkFlowEventQueue.get();
 				
 				// イベントが無い場合は少しだけ待つ(データが無いのにすぐループする必要がないため)
 				if (event == null) {
@@ -59,7 +58,7 @@ public class WorkFlowService implements Runnable  {
 				// ジョブが指定されていないので、最初のジョブを呼出す
 				if (event.getJobName() == null) {
 					JobModel jobModel = data.getWorkFlow().getJobList().get(0);
-					jobName = jobModel.getName();					
+					jobName = jobModel.getName();
 				} 
 				
 				// ジョブプロセスの生成

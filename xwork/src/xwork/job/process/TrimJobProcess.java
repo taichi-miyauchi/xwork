@@ -87,7 +87,7 @@ public class TrimJobProcess implements IJobProcess {
 			ChildItem child = new ChildItem();
 			child.setId(item.getName());
 			child.setName(item.getName());
-			child.setContent(item.getText());
+			child.setContent(item.getValue());
 			data.getItemList().add(child);
 		}
 		
