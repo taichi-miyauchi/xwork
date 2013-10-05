@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow name="digitize-trim">
+
+	<!-- エントリ-->
+	<job name="Entry">
+		<param name="jobCount" value="2"/>
+		<switch>
+			<case name="FINISH" to="EntryCheck"/>
+		</switch>
+	</job>
+ 
+	<!-- エントリチェック -->
+	<job name="EntryCheck">
+		<switch>
+			<case name="MATCH" to="EntryFinish"/>
+			<case name="UNMATCH" to="ReEntry"/>
+		</switch>
+	</job>
+	 
+	<!--  再エントリ -->
+	<job name="ReEntry">
+		<switch>
+			<case name="FINISH" to="EntryCheck"/>
+		</switch>
+	</job>
+	 
+	<!-- エントリ完了 -->
+	<job name="EntryFinish">
+	
+	</job>
+	
+</workflow>

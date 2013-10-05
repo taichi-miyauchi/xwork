@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow name="digitize-trim">
+
+	<!--  トリム  -->
+	<job name="Trim">
+		<switch>
+			<case name="NG" to="#Finish"/>
+			<case name="Trimmed">
+				<!-- 要素毎の分岐 -->
+				<item target="name" equal="TEL,FAX,URL" to="EntryItem"/>
+				<item to="EntryItem"/>
+			</case>
+		</switch>
+	</job>
+
+	<!--  項目判定  -->
+	<flow name="JudgeItem">
+		<job name="OCR">
+			<switch>
+				<case name="OK" to="Judge"/>
+				<default to="Entry"/>
+			</switch>
+		</job>
+		<job name="Judge">
+			<param name="jobCount" value="2"/>
+			
+		</job>
+		
+	</flow>
+	
+	<!-- 項目エントリ -->
+	<flow name="EntryItem" to="AllItemCheck">
+		<!-- エントリ-->
+		<job name="Entry">
+			<param name="jobCount" value="2"/>
+			<switch>
+				<case name="FINISH" to="EntryCheck"/>
+			</switch>
+		</job>
+	 
+		<!-- エントリチェック -->
+		<job name="EntryCheck">
+			<switch>
+				<case name="MATCH" to="#end"/>
+				<case name="UNMATCH" to="ReEntry"/>
+			</switch>
+		</job>
+		 
+		<!--  再エントリ -->
+		<job name="ReEntry">
+			<switch>
+				<case name="FINISH" to="EntryCheck"/>
+			</switch>
+		</job>	
+		
+	</flow>
+	 
+
+	<!--  項目最終チェック -->
+	<job name="AllItemCheck">
+		<switch>
+			<case to="#end"/>
+		</switch>
+	</job>
+	
+</workflow>
