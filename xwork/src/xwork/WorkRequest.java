@@ -56,10 +56,10 @@ public class WorkRequest {
 		this.content = content;
 	}
 	
-	public List<Item> getWorkItemList() {
+	public List<Item> getItems() {
 		return this.items;
 	}
-	public void setWorkItemList(List<Item> items) {
+	public void setItems(List<Item> items) {
 		this.items = items;
 	}
 	

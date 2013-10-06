@@ -20,7 +20,7 @@ public class EntryJobProcess implements IJobProcess {
 	 */
 	public void start(WorkData workData, WorkFlowEvent event) {
 		System.out.println("■EntryJob#start()■");
-		
+				
 		// エントリジョブの作成
 		Job job = new Job("Entry");
 		job.setWorkID(workData.getWorkID());
@@ -32,6 +32,7 @@ public class EntryJobProcess implements IJobProcess {
 		
 		// 要求データ取得
 		String content = null;
+		// TODO:すべてItemIDありきとする。
 		if (event.getItemID() == null) {
 			// 親要素の場合
 			content = workData.getWorkRequest().getContent();
@@ -39,7 +40,6 @@ public class EntryJobProcess implements IJobProcess {
 			// 子要素の場合
 			content = workData.getChildItem(event.getItemID()).getContent();
 		}
-		
 		req.setContent(content);
 		job.setRequest(req);
 		
@@ -69,8 +69,8 @@ public class EntryJobProcess implements IJobProcess {
 
 		Job job = data.getJob(event.getJobID());
 		if (job.getResultList().size() >= 2) {
-			job.setStatus("FINISH");			// ジョブ進捗状態＝完了設定　TODO:これは上位で設定すべき
-			job.setResultStatus("FINISH");	// 完了設定
+			job.setStatus("FINISH");				// ジョブ進捗状態＝完了設定　TODO:これは上位で設定すべき
+			job.setResultStatus("FINISH");		// 完了設定
 			System.out.println("完了！！！");
 		}
 	}

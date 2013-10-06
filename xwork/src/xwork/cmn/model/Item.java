@@ -6,9 +6,7 @@ import java.util.List;
 /**
  * [共通モデル] Item.
  * <item id="ＩＤ" name="項目名" type="text,image">
- *   <value>String</value>
- *   <img>byte[]</img>
- *   <rect x="1" y="1" w="10" h="10"/>
+ *   <value>String/<rect x="1" y="1" w="10" h="10"/>/byte[]</value>
  *   <property name="" value=""/>
  *   <item></item>
  *   <item></item>
@@ -27,7 +25,7 @@ public class Item {
 	private String value = null;
 	/** 矩形 */
 	private Rect rect = null;
-	
+	/** 子要素 */
 	private List<Item> items = new ArrayList<Item>();
 	
 	

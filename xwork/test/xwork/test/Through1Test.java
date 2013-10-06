@@ -1,5 +1,6 @@
 package xwork.test;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import javax.xml.bind.JAXB;
@@ -24,6 +25,16 @@ import xwork.job.model.JobResult;
 
 /**
  * JUnitテストクラス.
+ *・等価であるか：is()
+ *・等価でないか：not()
+ *・nullであるか：nullValue()
+ *・nullでないか：notNullValue()
+ *・指定したインスタンスか：instanceOf()
+ *・同じインスタンスか：sameInstance()
+ *・全ての条件を満たすか：allOf()
+ *・いずれかの条件を満たすか：anyOf()
+ *・値は何でもよい：anything()
+ *・トレースに表示する文字列を変更：describedAs() * 
  * 
  * @author taichi
  */
@@ -31,8 +42,7 @@ import xwork.job.model.JobResult;
 public class Through1Test {
 
 	/** エントリサービス */
-	WorkEntryService entryService = new WorkEntryService();
-	
+	private WorkEntryService entryService = new WorkEntryService();
 	/** ジョブサービス */
 	private JobService service = new JobService();
 	
@@ -68,11 +78,11 @@ public class Through1Test {
 		// デジタル化処理依頼
 		WorkRequest request = new WorkRequest();
 		request.setWorkTypeID("digitize-trim");
-		request.setConetnt("あいうえお");
+		//request.setConetnt("あいうえお");
 
 		// 項目1(画像1)
 		request.addItem(new Item("item001", null, "画像①"));
-		request.addItem(new Item("item002", null, "画像②"));
+		//request.addItem(new Item("item002", null, "画像②"));
 		
 		// 処理依頼
 		WorkEntryResult result = new WorkEntryResult();
@@ -91,11 +101,11 @@ public class Through1Test {
 		this.trace(job);
 
 		// トリムジョブであること
-		assertEquals("Trim", job.getJobName());
+		assertThat(job.getJobName(), is("Trim"));
+		assertThat(job.getRequest().getContent(), is("画像①"));
 		
 		// ジョブ結果設定
 		JobResult ret = new JobResult();
-		ret.setContent("とりむ～～");
 		ret.addItem("Name", "宮内太一");
 		ret.addItem("TEL", "090-1970-0895");		
 		job.add(ret);
@@ -181,9 +191,8 @@ public class Through1Test {
 
 	@Test
 	public void step999() {
-		// デジタル化処理依頼
-		WorkEntryService entryService = new WorkEntryService();
-		
+
+		// 結果取得
 		WorkResult result = entryService.receipt("1");
 
 		System.out.println("============================");
@@ -197,7 +206,7 @@ public class Through1Test {
 	
 	
 	private void trace(Job job) {
-		assertNotNull("Jobなし", job);
+		assertThat(job, notNullValue());
 		System.out.println(" ----------------------------------------------------");
 		System.out.println(" - JobName:" + job.getJobName());
 		System.out.println(" - Content:" + job.getRequest().getContent());

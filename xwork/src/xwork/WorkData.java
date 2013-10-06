@@ -10,7 +10,7 @@ import xwork.job.model.Job;
  * 作業データ.
  * <WorkData>
  * 	  <Request id="" type="名刺デジタル化"> ※ユーザからの要求
- *      <item id=""><content type="img">画像(Base64)</content></item>
+ *      <item id=""><value type="img">画像(Base64)</value></item>
  *      <item id="">
  *   </Request>
  *   

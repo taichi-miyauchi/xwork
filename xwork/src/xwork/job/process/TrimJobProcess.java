@@ -2,7 +2,7 @@ package xwork.job.process;
 
 import xwork.ChildItem;
 import xwork.WorkData;
-import xwork.WorkDataManager;
+import xwork.cmn.model.Item;
 import xwork.flow.WorkFlowEvent;
 import xwork.job.IJobProcess;
 import xwork.job.JobManager;
@@ -22,13 +22,15 @@ import xwork.job.model.JobResult;
  *    
  *    <result>
  *      <status>Trimmed/NoImage/NoItem</status>
- *      <item name="項目名">
+ *      <item name="項目名" type="polygon/rectangle">
  *      	<property name="言語" value="日本語"/>
- *      	<polygon><point x="1" y="1"/><point x="2" y="2"/></polygon>
- *      	<rect x="1" y="1" width="100" height="100"/>
+ *      	<value><point x="1" y="1"/><point x="2" y="2"/></value>
+ *      	<value><rect x="1" y="1" width="100" height="100"/></value>
  *      </item>
  *      <item name="項目名">
- *      
+ *      	<property name="言語" value="日本語"/>
+ *      	<value><point x="1" y="1"/><point x="2" y="2"/></value>
+ *      	<value><rect x="1" y="1" width="100" height="100"/></value> *      
  *      </item>
  *    </result>
  * </job>
@@ -43,7 +45,30 @@ public class TrimJobProcess implements IJobProcess {
 	 */
 	public void start(WorkData workData, WorkFlowEvent event) {
 		System.out.println("■TrimmerJob#start()■");
-		
+				
+		// 項目数ジョブを作成
+		for (Item item : workData.getWorkRequest().getItems()) {
+			// エントリジョブの作成
+			Job job = new Job("Trim");
+			job.setWorkID(workData.getWorkID());
+			job.setFlowName(event.getFlowName());
+			job.setItemID(event.getItemID());
+			
+			JobRequest req = new JobRequest();
+			//req.addItem(item.getValue());
+			req.setContent(item.getValue());
+			job.setRequest(req);
+			
+			// 作業データの更新
+			workData.getJobList().add(job);
+			
+			// エントリJobデータを登録
+			JobManager.regist(job);
+			
+			// 作業者1人に依頼
+			JobQueueManager.put(job);
+		}
+		/* 旧バージョン（1項目バージョン）
 		// 要求データ取得
 		String content = workData.getWorkRequest().getContent();
 
@@ -65,6 +90,7 @@ public class TrimJobProcess implements IJobProcess {
 		
 		// 作業者1人に依頼
 		JobQueueManager.put(job);
+		*/
 	}
 	
 	/**
@@ -76,7 +102,8 @@ public class TrimJobProcess implements IJobProcess {
 		// 完了したジョブ内容をWorkDataに反映 ※このあたりの処理は共通化対象
 		//String jobID = job.getID();
 
-		Job job = data.getCurrentJob();
+		// 対象のジョブを取得
+		Job job = data.getJob(event.getJobID());
 		JobResult ret = job.getResultList().get(0);
 		for (xwork.cmn.model.Item item : ret.getItems()) {
 			// TODO:画像分割処理
