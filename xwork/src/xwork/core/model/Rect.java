@@ -1,4 +1,4 @@
-package xwork.cmn.model;
+package xwork.core.model;
 
 public class Rect {
 

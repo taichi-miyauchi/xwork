@@ -15,7 +15,7 @@ import xwork.WorkEntryResult;
 import xwork.WorkEntryService;
 import xwork.WorkRequest;
 import xwork.WorkResult;
-import xwork.cmn.model.Item;
+import xwork.core.model.Item;
 import xwork.flow.WorkFlowModelManager;
 import xwork.flow.WorkFlowService;
 import xwork.flow.model.WorkFlowModel;

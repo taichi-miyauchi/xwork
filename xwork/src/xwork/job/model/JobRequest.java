@@ -3,7 +3,7 @@ package xwork.job.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import xwork.cmn.model.Item;
+import xwork.core.model.Item;
 
 /**
  * ジョブ 要求データ

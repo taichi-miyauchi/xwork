@@ -2,7 +2,7 @@ package xwork.job.process;
 
 import xwork.ChildItem;
 import xwork.WorkData;
-import xwork.cmn.model.Item;
+import xwork.core.model.Item;
 import xwork.flow.WorkFlowEvent;
 import xwork.flow.WorkFlowEventQueue;
 import xwork.job.IJobProcess;

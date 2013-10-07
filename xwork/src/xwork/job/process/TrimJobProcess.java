@@ -2,7 +2,7 @@ package xwork.job.process;
 
 import xwork.ChildItem;
 import xwork.WorkData;
-import xwork.cmn.model.Item;
+import xwork.core.model.Item;
 import xwork.flow.WorkFlowEvent;
 import xwork.job.IJobProcess;
 import xwork.job.JobManager;
@@ -105,7 +105,7 @@ public class TrimJobProcess implements IJobProcess {
 		// 対象のジョブを取得
 		Job job = data.getJob(event.getJobID());
 		JobResult ret = job.getResultList().get(0);
-		for (xwork.cmn.model.Item item : ret.getItems()) {
+		for (xwork.core.model.Item item : ret.getItems()) {
 			// TODO:画像分割処理
 			item.getRect();
 			

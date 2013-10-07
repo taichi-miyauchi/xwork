@@ -3,21 +3,13 @@ package xwork;
 import java.util.ArrayList;
 import java.util.List;
 
+import xwork.core.model.Flow;
 import xwork.flow.model.WorkFlowModel;
 import xwork.job.model.Job;
 
 /**
  * 作業データ.
- * <WorkData>
- * 	  <Request id="" type="名刺デジタル化"> ※ユーザからの要求
- *      <item id=""><value type="img">画像(Base64)</value></item>
- *      <item id="">
- *   </Request>
- *   
- *   <Result status="">
- *   
- *   </Result>
- * </WorkData>
+ *
  * 
  * @author taichi
  */
@@ -29,8 +21,12 @@ public class WorkData {
 	private WorkFlowModel workFlow = null;
 	/** 作業依頼データ */
 	private WorkRequest request = null;
+	/** フローデータ */
+	private List<Flow> flowList = new ArrayList<Flow>();
 	/** 作業結果データ */
 	private WorkResult result = null;
+	
+	
 	/**
 	 *  ジョブデータ(進捗データ) 
 	 */
@@ -172,5 +168,12 @@ public class WorkData {
 	}
 	public void setWorkFlow(WorkFlowModel workFlow) {
 		this.workFlow = workFlow;
+	}
+	
+	public List<Flow> getFlowList() {
+		return this.flowList;
+	}
+	public void setFlowList(List<Flow> flowList) {
+		this.flowList = flowList;
 	}
 }

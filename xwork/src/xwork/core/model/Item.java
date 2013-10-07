@@ -1,4 +1,4 @@
-package xwork.cmn.model;
+package xwork.core.model;
 
 import java.util.ArrayList;
 import java.util.List;

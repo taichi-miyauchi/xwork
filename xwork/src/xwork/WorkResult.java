@@ -2,7 +2,7 @@ package xwork;
 
 import java.util.List;
 
-import xwork.cmn.model.Item;
+import xwork.core.model.Item;
 
 /**
  * 作業結果.
