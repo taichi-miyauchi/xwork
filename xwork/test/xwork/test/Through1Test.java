@@ -106,8 +106,8 @@ public class Through1Test {
 		
 		// ジョブ結果設定
 		JobResult ret = new JobResult();
-		ret.addItem("Name", "宮内太一");
-		ret.addItem("TEL", "090-1970-0895");		
+		ret.addItem("sub1", "Name", "宮内太一");
+		ret.addItem("sub2", "TEL", "090-1970-0895");		
 		job.add(ret);
 		
 		service.submit(job);			
@@ -191,6 +191,9 @@ public class Through1Test {
 
 	@Test
 	public void step999() {
+		try {
+			Thread.sleep(1000L);
+		} catch (Exception ex) {}		
 
 		// 結果取得
 		WorkResult result = entryService.receipt("1");

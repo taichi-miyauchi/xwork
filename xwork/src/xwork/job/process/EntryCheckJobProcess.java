@@ -48,12 +48,8 @@ public class EntryCheckJobProcess implements IJobProcess {
 		// 要求データ作成
 		JobRequest req = new JobRequest();
 
-		List<Job> jobList = null;
-		if (event.getItemID() == null) {
-			jobList = workData.getJobList();
-		} else {
-			jobList = workData.getChildItem(event.getItemID()).getJobList();
-		}
+		List<Job> jobList = workData.getFlow(event.getItemID()).getJobList();
+		
 		// 前回ジョブ(EntryJob) (ReEntryJob) 		
 		// 過去ジョブ(Entry/ReEntry)を遡り要求データを作成する
 		// 前回ジョブ(EntryJob) まで遡って、EntryJobの結果とReEntryJobの結果をリクエストに設定する。
@@ -79,8 +75,8 @@ public class EntryCheckJobProcess implements IJobProcess {
 		System.out.println("■EntryCheck#start()■");
 
 		// 要求ジョブの作成
-		Job job = createJob(workData, event);
-				
+		Job job = this.createJob(workData, event);
+	
 		//
 		// エントリジョブ結果の照合処理
 		// ・複数のエントリ結果の中で同一のエントリがあるか
@@ -107,11 +103,7 @@ public class EntryCheckJobProcess implements IJobProcess {
 		}
 		
 		// 作業データに当ジョブを追加　⇒　これはどこかで永続化する必要がある
-		if (event.getItemID() == null) {
-			workData.getJobList().add(job);			
-		} else {
-			workData.getChildItem(event.getItemID()).getJobList().add(job);
-		}
+		workData.getFlow(event.getItemID()).addJob(job);
 		
 		// ジョブの登録
 		JobManager.regist(job);

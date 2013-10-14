@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xwork.core.model.Flow;
+import xwork.core.model.Item;
 import xwork.flow.model.WorkFlowModel;
 import xwork.job.model.Job;
 
@@ -25,16 +26,6 @@ public class WorkData {
 	private List<Flow> flowList = new ArrayList<Flow>();
 	/** 作業結果データ */
 	private WorkResult result = null;
-	
-	
-	/**
-	 *  ジョブデータ(進捗データ) 
-	 */
-	private List<Job> jobList = new ArrayList<Job>();
-	/**
-	 * 子要素フローデータ(子要素の進捗データ）
-	 */
-	private List<ChildItem> itemList = new ArrayList<ChildItem>();
 	
 	
 	/**
@@ -64,6 +55,30 @@ public class WorkData {
 		return str;
 	}
 	
+//	public JobModel getJobModel(String flowName, String jobName) {
+//		
+//	}
+	
+	/**
+	 * 指定ItemIDのItemデータ取得.
+	 * 
+	 * @param itemID
+	 * @return
+	 */
+	public Item getItem(String itemID) {
+		for (Item item : this.request.getItems()) {
+			if (itemID.equals(item.getId())) {
+				return item;
+			}
+		}
+		for (Flow flow : this.flowList) {
+			if (itemID.equals(flow.getItemID())) {
+				return flow.getRequeset();
+			}			
+		}
+		return null;
+	}
+	
 	/**
 	 * 指定JobIDのJobデータ取得.
 	 * 
@@ -71,67 +86,56 @@ public class WorkData {
 	 * @return
 	 */
 	public Job getJob(String jobID) {
-		for (Job job : this.jobList) {
-			if (jobID.equals(job.getJobID())) {
-				return job;
-			}
-		}
-		// 子項目からも検索
-		Job job = null;
-		for (ChildItem child : this.itemList) {
-			job = child.getJob(jobID);
-			if (job != null) {
-				return job;
+		for (Flow flow : this.flowList) {
+			for (Job job : flow.getJobList()) {
+				if (jobID.equals(job.getJobID())) {
+					return job;
+				}				
 			}
 		}
 		return null;
 	}
 	
 	/**
-	 * 最後のジョブ取得.
-	 * @return
+	 * ジョブ追加.
+	 * 
+	 * @param job
 	 */
-	public Job getLastJob() {
-		if (this.jobList.size() == 0) {
-			// ジョブが１つもない
-			return null;			
-		} else {
-			return this.jobList.get(this.jobList.size()-1);
+	public void addJob(Job job) {
+		Flow flow = getFlow(job.getItemID());
+		// まだフローデータが作成されていない場合作成する。
+		if (flow == null) {
+			flow = new Flow();
+			flow.setItemID(job.getItemID());
+			this.flowList.add(flow);
 		}
+		flow.addJob(job);
 	}
 	
-	/**
-	 * 現在ジョブ取得.
-	 * @return
-	 */
-	public Job getCurrentJob() {
-		if (this.jobList.size() == 0) {
-			// ジョブが１つもない
-			return null;			
-		} else {
-			return this.jobList.get(this.jobList.size()-1);
-		}
-	}
-
-	/**
-	 * １つ前のジョブ取得
-	 * @return
-	 */
-	public Job getPreviousJob() {
-		if (this.jobList.size() == 0) {
-			return null;
-		} else {
-			return this.jobList.get(this.jobList.size() - 2);
-		}
-	}
 	
-	public ChildItem getChildItem(String name) {
-		for (ChildItem item : this.itemList) {
-			if (name.equals(item.getName())) {
-				return item;
-			}
+	public Flow getFlow(String itemID) {
+		for (Flow flow : this.flowList) {
+			if (itemID.equals(flow.getItemID())) {
+				return flow;
+			}				
 		}
 		return null;
+	}
+	
+	/**
+	 * 子項目のフローリスト取得.
+	 * 
+	 * @param pid
+	 * @return
+	 */
+	public List<Flow> getFlowList(String pid) {
+		List<Flow> flows = new ArrayList<Flow>();
+		for (Flow flow : this.flowList) {
+			if (pid.equals(flow.getPID())) {
+				flows.add(flow);
+			}
+		}
+		return flows;
 	}
 	
 	public String getWorkID() {
@@ -150,17 +154,6 @@ public class WorkData {
 	}
 	public void setWorkResult(WorkResult result) {
 		this.result = result;
-	}
-	
-	public List<Job> getJobList() {
-		return this.jobList;
-	}
-	
-	public List<ChildItem> getItemList() {
-		return this.itemList;
-	}
-	public void setItemList(List<ChildItem> itemList) {
-		this.itemList = itemList;
 	}
 	
 	public WorkFlowModel getWorkFlow() {

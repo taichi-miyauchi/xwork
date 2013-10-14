@@ -25,7 +25,6 @@
 			<param name="jobCount" value="2"/>
 			
 		</job>
-		
 	</flow>
 	
 	<!-- 項目エントリ -->
@@ -52,7 +51,6 @@
 				<case name="FINISH" to="EntryCheck"/>
 			</switch>
 		</job>	
-		
 	</flow>
 	 
 

@@ -3,7 +3,6 @@ package xwork.job.process;
 import xwork.WorkData;
 import xwork.flow.WorkFlowEvent;
 import xwork.job.IJobProcess;
-import xwork.job.model.Job;
 
 /**
  * エントリ完了処理.
@@ -20,7 +19,7 @@ public class EntryFinishJobProcess implements IJobProcess {
 		System.out.println("- Job#Start EntryFinish");
 
 		// ジョブの取得
-		Job job = workData.getCurrentJob();
+		//Job job = workData.getFlow(event.getItemID()).getCurrentJob();
 
 		System.out.println("********************************");
 		System.out.println("  フロー完了");

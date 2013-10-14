@@ -1,6 +1,7 @@
 package xwork.job.process;
 
 import xwork.WorkData;
+import xwork.core.model.Item;
 import xwork.flow.WorkFlowEvent;
 import xwork.job.IJobProcess;
 import xwork.job.JobManager;
@@ -24,31 +25,19 @@ public class EntryJobProcess implements IJobProcess {
 		// エントリジョブの作成
 		Job job = new Job("Entry");
 		job.setWorkID(workData.getWorkID());
-		job.setFlowName(event.getFlowName());
 		job.setItemID(event.getItemID());
+		job.setParentItemID(event.getParentID());
 		
 		// 要求データの作成 TODO:プロセス内では、リクエストの生成だけで良いのでは？　Jobは上位でも
 		JobRequest req = new JobRequest();
 		
-		// 要求データ取得
-		String content = null;
-		// TODO:すべてItemIDありきとする。
-		if (event.getItemID() == null) {
-			// 親要素の場合
-			content = workData.getWorkRequest().getContent();
-		} else {
-			// 子要素の場合
-			content = workData.getChildItem(event.getItemID()).getContent();
-		}
-		req.setContent(content);
+		// 処理対象データ取得
+		Item item = workData.getItem(event.getItemID());
+		req.setContent(item.getValue());
 		job.setRequest(req);
 		
 		// 作業データの更新
-		if (event.getItemID() == null) {
-			workData.getJobList().add(job);			
-		} else {
-			workData.getChildItem(event.getItemID()).getJobList().add(job);
-		}
+		workData.addJob(job);
 		
 		// エントリJobデータを登録
 		JobManager.regist(job);

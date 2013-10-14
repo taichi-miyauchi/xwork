@@ -19,16 +19,20 @@ public class WorkFlowEvent {
 	private EventID eventID = EventID.START;
 	
 	/** 
-	 * イベント対象の作業ID
+	 * イベント対象の作業ID.
 	 */
 	private String workID = null;
 	/**
-	 * サブフロー名.
+	 * フロー名.
 	 */
 	private String flowName = null;
+	/**
+	 * 親項目ID.
+	 * トリマー後の子項目のフロー時に設定することを想定
+	 */
+	private String parentID = null;
 	/** 
 	 * イベント対象の項目ID.
-	 * トリマー後の子項目のフロー時に設定することを想定
 	 */
 	private String itemID = null;
 	/** 
@@ -36,20 +40,27 @@ public class WorkFlowEvent {
 	 */
 	private String jobName = null;
 	/** 
-	 * イベント対象のジョブID 
+	 * イベント対象のジョブID.
 	 */
 	private String jobID = null;
 	
 	/**
-	 * コンストラクタ
+	 * コンストラクタ.
 	 */
 	public WorkFlowEvent() {
 	}
-
-	public WorkFlowEvent(EventID eventID, String workID, String flowName, String itemID, String jobName, String jobID) {
+	public WorkFlowEvent(EventID eventID, String workID, String itemID, String jobID) {
+		this.eventID = eventID;
+		this.workID = workID;
+		this.itemID = itemID;
+		this.jobID = jobID;
+	}
+	
+	public WorkFlowEvent(EventID eventID, String workID, String flowName, String itemID, String parentID, String jobName, String jobID) {
 		this.eventID = eventID;
 		this.workID = workID;
 		this.flowName = flowName;
+		this.parentID = parentID;
 		this.itemID = itemID;
 		this.jobName = jobName;
 		this.jobID = jobID;
@@ -71,6 +82,13 @@ public class WorkFlowEvent {
 	}
 	public void setFlowName(String flowName) {
 		this.flowName = flowName;
+	}
+	
+	public String getParentID() {
+		return this.parentID;
+	}
+	public void setParentID(String parentID) {
+		this.parentID = parentID;
 	}
 	
 	public String getItemID() {

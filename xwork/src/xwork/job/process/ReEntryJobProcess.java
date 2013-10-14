@@ -1,7 +1,8 @@
 package xwork.job.process;
 
+import java.util.List;
+
 import xwork.WorkData;
-import xwork.WorkDataManager;
 import xwork.flow.WorkFlowEvent;
 import xwork.job.IJobProcess;
 import xwork.job.JobManager;
@@ -45,20 +46,21 @@ public class ReEntryJobProcess implements IJobProcess {
 		JobRequest req = new JobRequest();
 		
 		// 前回ジョブ(EntryJob) まで遡って、EntryJobの結果とReEntryJobの結果をリクエストに設定する。
-		for (int i=0; i<workData.getJobList().size(); i++) {
-			Job preJob = workData.getJobList().get(workData.getJobList().size() - (i+1));
+		List<Job> jobList = workData.getFlow(event.getItemID()).getJobList();
+		for (int i=0; i<jobList.size(); i++) {
+			Job preJob = jobList.get(jobList.size() - (i+1));
 			if ("Entry".equals(preJob.getJobName()) || "ReEntry".equals(preJob.getJobName())) {
 				for (JobResult ret : preJob.getResultList()) {
 					req.addItem(ret.getContent());
 				}
 			}
-		}
-		
+		}		
 		job.setRequest(req);
 		
 		// 作業データの更新
-		WorkDataManager.get(workData.getWorkID()).getJobList().add(job);
-				
+		workData.addJob(job);
+		
+		// ジョブ登録
 		JobManager.regist(job);
 		// 1つ
 		JobQueueManager.put(job);
@@ -73,7 +75,7 @@ public class ReEntryJobProcess implements IJobProcess {
 		// 完了したジョブ内容をWorkDataに反映 ※このあたりの処理は共通化対象
 		//String jobID = job.getID();
 
-		Job job = data.getCurrentJob();
+		Job job = data.getFlow(event.getItemID()).getCurrentJob();
 		if (job.getResultList().size() >= 1) {
 			job.setStatus("FINISH");			// ジョブ進捗状態＝完了設定　TODO:これは上位で設定すべき
 			job.setResultStatus("FINISH");	// 完了設定

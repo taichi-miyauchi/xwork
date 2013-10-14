@@ -58,8 +58,8 @@ public class JobResult {
 		this.items = items;
 	}
 	
-	public void addItem(String name, String text) {
-		this.items.add(new Item(name,text));
+	public void addItem(String id, String name, String text) {
+		this.items.add(new Item(id, name,text));
 	}
 	
 	

@@ -14,6 +14,8 @@ import xwork.job.model.Job;
 public class Flow {
 	
 	private String id = null;
+	private String pid = null;
+	private String name = null;
 	private String status = null;
 	private String itemID = null;
 	
@@ -36,12 +38,65 @@ public class Flow {
 		this.jobList.add(job);
 	}
 	
+	/**
+	 * 最後のジョブ取得.
+	 * @return
+	 */
+	public Job getLastJob() {
+		if (this.jobList.size() == 0) {
+			// ジョブが１つもない
+			return null;			
+		} else {
+			return this.jobList.get(this.jobList.size()-1);
+		}
+	}
+	
+	/**
+	 * 現在ジョブ取得.
+	 * @return
+	 */
+	public Job getCurrentJob() {
+		if (this.jobList.size() == 0) {
+			// ジョブが１つもない
+			return null;			
+		} else {
+			return this.jobList.get(this.jobList.size()-1);
+		}
+	}
+
+	/**
+	 * １つ前のジョブ取得
+	 * @return
+	 */
+	public Job getPreviousJob() {
+		if (this.jobList.size() == 0) {
+			return null;
+		} else {
+			return this.jobList.get(this.jobList.size() - 2);
+		}
+	}
+	
+	
 	
 	public String getID() {
 		return this.id;
 	}
 	public void setID(String id) {
 		this.id = id;
+	}
+	
+	public String getPID() {
+		return this.pid;
+	}
+	public void setPID(String pid) {
+		this.pid = pid;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public String getStatus() {
@@ -77,5 +132,9 @@ public class Flow {
 	}
 	public void setResult(Item result) {
 		this.result = result;
+	}
+	public void setResultValue(String value) {
+		this.result = new Item();
+		this.result.setValue(value);
 	}
  }

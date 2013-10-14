@@ -1,5 +1,6 @@
 package xwork;
 
+import xwork.core.model.Item;
 import xwork.flow.WorkFlowEvent;
 import xwork.flow.WorkFlowEventQueue;
 
@@ -36,9 +37,12 @@ public class WorkEntryService {
 			WorkDataManager.regist(data);
 
 			// 作業プロセスキューに登録（処理開始）⇒ WorkFlowServiceが処理する
-			// 	eventType, workID, flowName, itemID, jobName, jobID {
-			WorkFlowEventQueue.put(new WorkFlowEvent(WorkFlowEvent.EventID.START, data.getWorkID(), null, null, null, null));
-			
+			//WorkFlowEventQueue.put(new WorkFlowEvent(WorkFlowEvent.EventID.START, data.getWorkID(), null, null));
+			// 子項目(item)単位のイベントキューを作成する
+			for (Item item : data.getWorkRequest().getItems()) {
+				WorkFlowEventQueue.put(new WorkFlowEvent(WorkFlowEvent.EventID.START, data.getWorkID(), item.getId(), null));
+			}
+						
 			// 受付結果を設定
 			res.setStatus("OK");			
 		}

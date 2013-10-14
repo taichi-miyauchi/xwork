@@ -1,7 +1,7 @@
 package xwork.job.process;
 
-import xwork.ChildItem;
 import xwork.WorkData;
+import xwork.core.model.Flow;
 import xwork.core.model.Item;
 import xwork.flow.WorkFlowEvent;
 import xwork.job.IJobProcess;
@@ -45,52 +45,29 @@ public class TrimJobProcess implements IJobProcess {
 	 */
 	public void start(WorkData workData, WorkFlowEvent event) {
 		System.out.println("■TrimmerJob#start()■");
-				
-		// 項目数ジョブを作成
-		for (Item item : workData.getWorkRequest().getItems()) {
-			// エントリジョブの作成
-			Job job = new Job("Trim");
-			job.setWorkID(workData.getWorkID());
-			job.setFlowName(event.getFlowName());
-			job.setItemID(event.getItemID());
-			
-			JobRequest req = new JobRequest();
-			//req.addItem(item.getValue());
-			req.setContent(item.getValue());
-			job.setRequest(req);
-			
-			// 作業データの更新
-			workData.getJobList().add(job);
-			
-			// エントリJobデータを登録
-			JobManager.regist(job);
-			
-			// 作業者1人に依頼
-			JobQueueManager.put(job);
-		}
-		/* 旧バージョン（1項目バージョン）
-		// 要求データ取得
-		String content = workData.getWorkRequest().getContent();
 
+		// 処理対処の項目データ取得
+		Item item = workData.getItem(event.getItemID());
+		
 		// エントリジョブの作成
 		Job job = new Job("Trim");
 		job.setWorkID(workData.getWorkID());
-		job.setFlowName(event.getFlowName());
 		job.setItemID(event.getItemID());
+		job.setParentItemID(event.getParentID());
 		
 		JobRequest req = new JobRequest();
-		req.setContent(content);
+		//req.addItem(item.getValue());
+		req.setContent(item.getValue());
 		job.setRequest(req);
 		
 		// 作業データの更新
-		WorkDataManager.get(workData.getWorkID()).getJobList().add(job);
+		workData.addJob(job);
 		
 		// エントリJobデータを登録
 		JobManager.regist(job);
 		
 		// 作業者1人に依頼
-		JobQueueManager.put(job);
-		*/
+		JobQueueManager.put(job);			
 	}
 	
 	/**
@@ -105,17 +82,18 @@ public class TrimJobProcess implements IJobProcess {
 		// 対象のジョブを取得
 		Job job = data.getJob(event.getJobID());
 		JobResult ret = job.getResultList().get(0);
-		for (xwork.core.model.Item item : ret.getItems()) {
+		for (Item item : ret.getItems()) {
 			// TODO:画像分割処理
 			item.getRect();
 			
 			// WorkDataに子要素登録
 			//  →これにより、子要素のフローが実行される。
-			ChildItem child = new ChildItem();
-			child.setId(item.getName());
-			child.setName(item.getName());
-			child.setContent(item.getValue());
-			data.getItemList().add(child);
+			Flow flow = new Flow();
+			flow.setPID(event.getItemID());
+			flow.setItemID(item.getId());
+			flow.setName(item.getName());
+			flow.setRequest(item);
+			data.getFlowList().add(flow);			
 		}
 		
 		job.setStatus("FINISH");			// ジョブ進捗状態＝完了設定　TODO:これは上位で設定すべき

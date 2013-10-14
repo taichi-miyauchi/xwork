@@ -32,22 +32,26 @@ public class Job {
 	/** WorkID. 作業ID */
 	private String workID = null;
 	/** 
-	 * Flow名.
-	 * サブフロー時に設定される。
-	 */
-	private String flowName = null;
-	/** 
 	 * ItemID.
 	 * 項目(Item)毎のフローの場合に使用。
 	 */
 	private String itemID = null;
+	/** 
+	 * 親項目ID.
+	 * サブフロー時に設定される。
+	 */
+	private String parentItemID = null;
 	/**
 	 *  JobID（ジョブ単位でユニークな値）
 	 */
 	private String jobID = null;
-	// ジョブ名
+	/**
+	 * ジョブ名
+	 */
 	private String jobName = null;
-	// ジョブステータス（処理待ち・処理中・完了・異常）
+	/**
+	 * ジョブステータス（処理待ち・処理中・完了・異常）
+	 */
 	private String status = null;
 	
 	
@@ -83,11 +87,11 @@ public class Job {
 		this.workID = workID;
 	}
 	
-	public String getFlowName() {
-		return this.flowName;
+	public String getParentItemID() {
+		return this.parentItemID;
 	}
-	public void setFlowName(String flowName) {
-		this.flowName = flowName;
+	public void setParentItemID(String parentItemID) {
+		this.parentItemID = parentItemID;
 	}
 	
 	// 項目ID

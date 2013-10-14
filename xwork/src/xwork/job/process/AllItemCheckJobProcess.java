@@ -1,7 +1,7 @@
 package xwork.job.process;
 
-import xwork.ChildItem;
 import xwork.WorkData;
+import xwork.core.model.Flow;
 import xwork.core.model.Item;
 import xwork.flow.WorkFlowEvent;
 import xwork.flow.WorkFlowEventQueue;
@@ -17,13 +17,18 @@ import xwork.job.model.JobResult;
  * [JOB-IF]
  * <job>
  *   <request>
- *      <item>エントリA結果</item>
- *      <item>エントリB結果</item>
+ *      <item id="1" name="名前"><value>名前</value></item>
+ *      <item id="2" name="TEL"><value>電話番号</value></item>
  *    </request>
  *    
  *    <result>
- *      <status>Match/UnMatch</status>
- *      <item>エントリ結果(最終)</item> ※これは一致(Match)した場合に設定する
+ *      <status>OK/NG</status>
+ *      <item id="" name="">
+ *      	<value>名前</value>
+ *      </item>
+ *      <item id="" name="">
+ *      	<value>名前</value>
+ *      </item>*      
  *    </result>
  * </job>
  * 
@@ -41,15 +46,15 @@ public class AllItemCheckJobProcess implements IJobProcess {
 		// ジョブの取得
 		Job job = new Job("AllItemCheck");
 		job.setWorkID(workData.getWorkID());
-		job.setFlowName(event.getFlowName());
+		job.setParentItemID(event.getParentID());
 		
 		// 要求データ作成
 		JobRequest req = new JobRequest();
 		
 		// 子項目ごとの結果をリクエストに纏める
-		for(ChildItem child : workData.getItemList()) {
-			System.out.println(child.getName() + ":" + child.getResult());
-			req.addItem(new Item(child.getName(), child.getResult()));
+		for(Flow flow : workData.getFlowList(event.getItemID())) {
+			System.out.println(flow.getName() + ":" + flow.getResult().getValue());
+			req.addItem(new Item(flow.getName(), flow.getResult().getValue()));
 		}
 		
 		job.setRequest(req);		
@@ -70,19 +75,19 @@ public class AllItemCheckJobProcess implements IJobProcess {
 		
 		// 結果の作成
 		JobResult result = new JobResult();
-		for (ChildItem child : workData.getItemList()) {
-			result.addItem(child.getName(), child.getResult());
+		for (Flow child : workData.getFlowList()) {
+			result.addItem(child.getItemID(), child.getName(), child.getResult().getValue());
 		}
 		job.add(result);
 				
 		// 作業データに当ジョブを追加　⇒　これはどこかで永続化する必要がある
-		workData.getJobList().add(job);
+		workData.addJob(job);
 		
 		// ジョブの登録
 		JobManager.regist(job);
 		
 		// 作業プロセスキューに登録（処理開始）
-		WorkFlowEventQueue.put(new WorkFlowEvent(WorkFlowEvent.EventID.FINISH, workData.getWorkID(), job.getFlowName(), job.getItemID(), job.getJobName(), job.getJobID()));
+		WorkFlowEventQueue.put(new WorkFlowEvent(WorkFlowEvent.EventID.FINISH, workData.getWorkID(), job.getItemID(), event.getParentID(), job.getJobName(), job.getJobID()));
 	}	
 	
 	/**
