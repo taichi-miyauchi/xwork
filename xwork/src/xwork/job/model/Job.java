@@ -31,6 +31,11 @@ public class Job {
 	
 	/** WorkID. 作業ID */
 	private String workID = null;
+	/**
+	 * フロー名.
+	 * サブフロー時に、サブフロー名が設定される。
+	 */
+	private String flowName = null;
 	/** 
 	 * ItemID.
 	 * 項目(Item)毎のフローの場合に使用。
@@ -148,5 +153,13 @@ public class Job {
 	}
 	public List<JobResult> getResultList() {
 		return this.resultList;
+	}
+	
+	// サブフロー名
+	public void setFlowName(String flowName) {
+		this.flowName = flowName;
+	}
+	public String getFlowName() {
+		return this.flowName;
 	}
 }

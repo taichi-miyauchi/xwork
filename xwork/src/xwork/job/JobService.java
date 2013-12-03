@@ -47,7 +47,14 @@ public class JobService {
 		// WorkFlow通知
 		// 作業プロセスキューに登録（ジョブ完了）
 		WorkFlowEventQueue.put(
-				new WorkFlowEvent(WorkFlowEvent.EventID.FINISH, workData.getWorkID(), job.getFlowName(), job.getItemID(), job.getJobName(), job.getJobID()));
+				new WorkFlowEvent(
+						WorkFlowEvent.EventID.FINISH, 
+						workData.getWorkID(), 
+						job.getFlowName(), 
+						job.getItemID(), 
+						job.getParentItemID(),	// parentID
+						job.getJobName(), 
+						job.getJobID()));
 		
 	}
 }

@@ -1,7 +1,5 @@
 package xwork.flow;
 
-import xwork.job.*;
-
 /**
  * WorkFlow処理.
  * WorkFlowとWorkDataに従って処理を実行する

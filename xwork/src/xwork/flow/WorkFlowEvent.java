@@ -55,7 +55,16 @@ public class WorkFlowEvent {
 		this.itemID = itemID;
 		this.jobID = jobID;
 	}
-	
+	/**
+	 * コンストラクタ.
+	 * @param eventID イベントID
+	 * @param workID WorkID
+	 * @param flowName フロー名
+	 * @param itemID アイテムID
+	 * @param parentID 親アイテムID
+	 * @param jobName ジョブ名
+	 * @param jobID ジョブID
+	 */
 	public WorkFlowEvent(EventID eventID, String workID, String flowName, String itemID, String parentID, String jobName, String jobID) {
 		this.eventID = eventID;
 		this.workID = workID;

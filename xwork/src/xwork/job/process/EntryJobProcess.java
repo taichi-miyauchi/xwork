@@ -25,6 +25,7 @@ public class EntryJobProcess implements IJobProcess {
 		// エントリジョブの作成
 		Job job = new Job("Entry");
 		job.setWorkID(workData.getWorkID());
+		job.setFlowName(event.getFlowName());
 		job.setItemID(event.getItemID());
 		job.setParentItemID(event.getParentID());
 		
@@ -60,7 +61,7 @@ public class EntryJobProcess implements IJobProcess {
 		if (job.getResultList().size() >= 2) {
 			job.setStatus("FINISH");				// ジョブ進捗状態＝完了設定　TODO:これは上位で設定すべき
 			job.setResultStatus("FINISH");		// 完了設定
-			System.out.println("完了！！！");
+			System.out.println("エントリ完了！！！");
 		}
 	}
 }

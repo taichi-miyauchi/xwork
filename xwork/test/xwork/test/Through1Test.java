@@ -196,6 +196,9 @@ public class Through1Test {
 		} catch (Exception ex) {}		
 
 		// 結果取得
+		while (entryService.receipt("1") == null) {
+			try { Thread.sleep(1000L);} catch (Exception ex) {} 
+		}
 		WorkResult result = entryService.receipt("1");
 
 		System.out.println("============================");
@@ -203,8 +206,7 @@ public class Through1Test {
 		for (Item item : result.getItemList()) {
 			System.out.println("item " + item.toString());
 		}
-		System.out.println("============================");
-		
+		System.out.println("============================");			
 	}
 	
 	

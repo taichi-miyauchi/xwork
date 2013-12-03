@@ -75,7 +75,7 @@ public class AllItemCheckJobProcess implements IJobProcess {
 		
 		// 結果の作成
 		JobResult result = new JobResult();
-		for (Flow child : workData.getFlowList()) {
+		for (Flow child : workData.getFlowList(job.getParentItemID())) {
 			result.addItem(child.getItemID(), child.getName(), child.getResult().getValue());
 		}
 		job.add(result);
@@ -87,7 +87,15 @@ public class AllItemCheckJobProcess implements IJobProcess {
 		JobManager.regist(job);
 		
 		// 作業プロセスキューに登録（処理開始）
-		WorkFlowEventQueue.put(new WorkFlowEvent(WorkFlowEvent.EventID.FINISH, workData.getWorkID(), job.getItemID(), event.getParentID(), job.getJobName(), job.getJobID()));
+		WorkFlowEventQueue.put(
+				new WorkFlowEvent(
+						WorkFlowEvent.EventID.FINISH, 
+						workData.getWorkID(), 
+						null,	// flowName
+						job.getItemID(), 
+						event.getParentID(), 
+						job.getJobName(), 
+						job.getJobID()));
 	}	
 	
 	/**

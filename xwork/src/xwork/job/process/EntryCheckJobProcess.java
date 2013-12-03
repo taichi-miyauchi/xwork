@@ -44,6 +44,7 @@ public class EntryCheckJobProcess implements IJobProcess {
 		job.setWorkID(workData.getWorkID());
 		job.setFlowName(event.getFlowName());
 		job.setItemID(event.getItemID());
+		job.setParentItemID(event.getParentID());
 		
 		// 要求データ作成
 		JobRequest req = new JobRequest();
@@ -109,7 +110,15 @@ public class EntryCheckJobProcess implements IJobProcess {
 		JobManager.regist(job);
 		
 		// 作業プロセスキューに登録（処理開始）
-		WorkFlowEventQueue.put(new WorkFlowEvent(WorkFlowEvent.EventID.FINISH, workData.getWorkID(), job.getFlowName(), job.getItemID(), job.getJobName(), job.getJobID()));
+		WorkFlowEventQueue.put(
+				new WorkFlowEvent(
+						WorkFlowEvent.EventID.FINISH, 
+						workData.getWorkID(), 
+						job.getFlowName(), 
+						job.getItemID(), 
+						job.getParentItemID(),	// parentID
+						job.getJobName(), 
+						job.getJobID()));
 	}	
 	
 	/**

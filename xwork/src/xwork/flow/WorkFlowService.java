@@ -109,13 +109,17 @@ public class WorkFlowService implements Runnable  {
 			
 			/** 次ジョブへの遷移処理 */
 			// ジョブ定義取得
-			JobConfig jobConf = data.getFlowConfig(event.getFlowName()).getJobConfig(event.getJobName());
 			JobModel jobConfig = null;
 			if (event.getParentID() != null) {
 				jobConfig = data.getWorkFlow().getFlowModel(event.getFlowName()).getJobModel(targetJob.getJobName());
 			} else {
 				jobConfig = data.getWorkFlow().getJobModel(targetJob.getJobName());
 			}
+			
+			if (jobConfig == null) {
+				System.out.println("jobConfig is null.");
+			}
+			
 			CaseModel cmodel = jobConfig.switchModel.getCase(targetJob.getResultStatus());
 			
 			if (cmodel == null) {
@@ -149,7 +153,7 @@ public class WorkFlowService implements Runnable  {
 						
 						// 子要素フローすべて完了かチェック
 						boolean isAllFinish = true;
-						for (Flow cflow : data.getFlowList()) {
+						for (Flow cflow : data.getFlowList(targetJob.getFlowName())) {
 							if (!"Finish".equals(cflow.getStatus())) {
 								isAllFinish = false;
 								break;
@@ -159,7 +163,15 @@ public class WorkFlowService implements Runnable  {
 						if (isAllFinish) {
 							// 次ジョブの開始イベント登録
 							WorkFlowEventQueue.put(new WorkFlowEvent(
-									WorkFlowEvent.EventID.START, data.getWorkID(), null, null, nextJobName, null));
+									WorkFlowEvent.EventID.START, 
+									data.getWorkID(), 
+									null, 	// flowName
+									null, 	// itemID
+									null, 	// parentID
+									nextJobName, 
+									null));	// jobID
+						} else {
+							System.out.println("エラー！！");
 						}
 						
 					} 
@@ -180,7 +192,13 @@ public class WorkFlowService implements Runnable  {
 				} else {
 					// 次ジョブの開始イベント登録
 					WorkFlowEventQueue.put(new WorkFlowEvent(
-							WorkFlowEvent.EventID.START, data.getWorkID(), targetJob.getFlowName(), targetJob.getItemID(), cmodel.getTo(), null));
+							WorkFlowEvent.EventID.START, 
+							data.getWorkID(), 
+							targetJob.getFlowName(), 
+							targetJob.getItemID(), 
+							targetJob.getParentItemID(), 
+							cmodel.getTo(), 
+							null));
 				}
 			
 			// 子項目別分岐の場合
@@ -202,7 +220,13 @@ public class WorkFlowService implements Runnable  {
 						System.out.println("Flow終了");
 					} else {
 						WorkFlowEventQueue.put(new WorkFlowEvent(
-								WorkFlowEvent.EventID.START, data.getWorkID(), imodel.getTo(), cflow.getItemID(), nextJobName, null));
+								WorkFlowEvent.EventID.START, 
+								data.getWorkID(), 
+								imodel.getTo(), 			// flowName
+								cflow.getItemID(), 	// itemID
+								event.getItemID(), 	// parentID
+								nextJobName, 
+								null));
 					}
 				}	
 			}	

@@ -35,7 +35,7 @@ public class JobManager {
 	 * @param job
 	 */
 	public static void update(Job job) {
-		Job original = jobList.get(job.getJobID());
-		original = job;
+		//Job original = jobList.get(job.getJobID());
+		//original = job;
 	}
 }
